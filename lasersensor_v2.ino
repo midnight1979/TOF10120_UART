@@ -24,7 +24,10 @@ void setup() {
   // Start software serial port (TOF10120 port)
   portOne.begin(9600);
   Serial.println("TOF10120 Laser Distance Metering Sensor start...");
-  portOne.write("s2-20#");
+  portOne.write("s2-20#");      // not realy sure that this line is neccesary, taken from https://github.com/SoyM/TOF10120 example
+                                // I don't speak Chinese (datasheet only in Chinese language), that's why i doesn't really know what this command do with sensor
+                                // if look for answer - it just unswering "OK"
+                                // and you can try this example without this line - it working well too.
 }
 
 void loop() {
