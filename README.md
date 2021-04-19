@@ -1,8 +1,10 @@
 # TOF10120_UART
 TOF10120 arduino example (UART MODE)
 
-Connections:
+# Connections:
+
 TOF10120     Arduino Nano (atmega328)
+
 GND(1) -----> GND
 
 VDD(2) -----> +5v
