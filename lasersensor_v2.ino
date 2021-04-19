@@ -1,27 +1,27 @@
 #include <SoftwareSerial.h>
 
-// Служебные переменные для работы с UART датчика TOF10120
+// common variables for TOF10120 UART reading and parsing
 String rx_tof = "";
 char rx_char;
 uint8_t double_m = 0;
 bool newLine_tof = false;
 
-// Итоговый замер расстояния
+// total distance value
 uint8_t distance = 0;
 
-// Переменные для усреднения знчений т.к. датчик немного "шумит"
+// Average filter variables, because of noise of raw sensor values from UART
 uint8_t counter = 0;
 int commulative = 0;
-const uint8_t koeff = 5;    // Коэффициент усреднения (среднее арифметическое) - не рекомендуется больше 10
+const uint8_t koeff = 5;    // average coefficient
 
 
 // software serial #1: RX = digital pin 10, TX = digital pin 11
 SoftwareSerial portOne(10, 11);
 
 void setup() {
-  // Open serial communications and wait for port to open:
+  // Open serial communications (monitoring port)
   Serial.begin(9600);
-  // Start software serial port
+  // Start software serial port (TOF10120 port)
   portOne.begin(9600);
   Serial.println("TOF10120 Laser Distance Metering Sensor start...");
   portOne.write("s2-20#");
@@ -29,13 +29,7 @@ void setup() {
 
 void loop() {
 
-  if (Serial.available() > 0) {
-    if (Serial.read() == '\n') {
-      Serial.println("Debug str...");
-    }
-  }
-
-  // Опрос датчика и измерение расстояния
+  // Getting values from sensor procedure
   measure();
 }
 
@@ -43,7 +37,7 @@ void measure()
 {
   rx_tof = "";
 
-  /* Парсинг значений полученных от UART датчика */
+  // Values parsing from TOF10120 UART
   while (1) {
     if (portOne.available()) {
       rx_char = portOne.read();
@@ -69,6 +63,7 @@ void measure()
   newLine_tof = false;
   double_m = 0;
 
+  // average sensor values and print to Serial
   if (rx_tof != "") {
     if (counter < koeff)
     {
